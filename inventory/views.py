@@ -2,13 +2,32 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import ProductEntryForm
 from .models import Product
+from django.db.models import Q
 
 def home(request):
     return render(request, "home.html")
 
+
 def inventory_display(request):
+    query = request.GET.get("q")  # término de búsqueda
+    category = request.GET.get("category")  # categoría seleccionada
+
     products = Product.objects.all().order_by("name")
-    return render(request, "inventory_display.html", {"products": products})
+
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+
+    if category and category != "all":
+        products = products.filter(category=category)
+
+    return render(request, "inventory_display.html", {
+        "products": products,
+        "query": query,
+        "category": category,
+        "categories": Product.CATEGORY_CHOICES,
+    })
 
 def product_entry(request):
     if request.method == "POST":
