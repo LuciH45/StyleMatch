@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario</title>
+    <style>
+        body{ font-family:Arial, sans-serif; background:#ede7f6; margin:0; padding:20px; color:#4a148c; }
+        h1{ text-align:center; margin-bottom:20px; }
+        .top-actions{ text-align:center; margin-bottom:20px; }
+        .top-actions a{
+            display:inline-block; margin:0 10px; padding:10px 18px;
+            background:#7e57c2; color:#fff; border-radius:10px;
+            text-decoration:none; font-weight:bold;
+        }
+        .top-actions a:hover{ background:#5e35b1; }
+        .grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; }
+        .card{
+            background:#fff; border:1px solid #d1c4e9;
+            padding:20px; border-radius:14px; text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.12);
+        }
+        .card img{ max-width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+        .btn{ display:block; margin-top:8px; padding:10px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+        .btn-add{ background:#8e24aa; color:#fff; }
+        .btn-add:hover{ background:#6a1b9a; }
+        .btn-del{ background:#d32f2f; color:#fff; }
+        .btn-del:hover{ background:#b71c1c; }
+        .back{ display:block; margin:30px auto 0; width:fit-content; text-decoration:none; color:#6a1b9a; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <h1>Inventario de Ropa</h1>
+    <div class="top-actions">
+        <a href="{% url 'product_entry' %}">➕ Nuevo Producto</a>
+        <a href="{% url 'home' %}">🏠 Inicio</a>
+    </div>
+
+    <div class="grid">
+        {% for product in products %}
+        <div class="card">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% endif %}
+            <h2>{{ product.name }}</h2>
+            <p><strong>Categoría:</strong> {{ product.get_category_display }}</p>
+            <p><strong>Unidades:</strong> {{ product.quantity }}</p>
+            <p>{{ product.description }}</p>
+
+            <a href="{% url 'add_unit' product.id %}" class="btn btn-add">➕ Agregar unidad</a>
+            <a href="{% url 'delete_product' product.id %}" class="btn btn-del" onclick="return confirm('¿Eliminar {{ product.name }}?')">🗑 Eliminar</a>
+        </div>
+        {% empty %}
+        <p style="grid-column:1/-1;text-align:center;">No hay productos registrados.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'home' %}" class="back">⬅ Volver al inicio</a>
+</body>
+</html>

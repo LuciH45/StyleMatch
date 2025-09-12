@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #4a148c;
+        }
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        a {
+            display: inline-block;
+            margin: 12px;
+            padding: 14px 22px;
+            border-radius: 12px;
+            background: #7e57c2;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background .2s;
+        }
+        a:hover { background: #5e35b1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👗 Tienda de Ropa</h1>
+        <a href="{% url 'inventory_display' %}">📦 Inventario</a>
+        <a href="{% url 'product_entry' %}">➕ Crear Producto</a>
+    </div>
+</body>
+</html>

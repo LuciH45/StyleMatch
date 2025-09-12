@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Producto</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f3e5f5; margin:0; padding:20px; }
+        .container {
+            max-width: 600px; margin:40px auto;
+            background:#fff; padding:30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        }
+        h1 { text-align:center; color:#6a1b9a; margin-bottom:10px; }
+        p.sub { text-align:center; color:#8e24aa; margin-bottom:25px; }
+        label { font-weight:bold; color:#6a1b9a; margin-top:12px; display:block; }
+        input, select, textarea {
+            width:100%; padding:10px;
+            border:1px solid #ce93d8; border-radius:8px;
+            margin-top:4px; background:#fafafa;
+        }
+        button {
+            margin-top:20px; padding:12px;
+            background:#8e24aa; color:#fff; border:none;
+            border-radius:10px; font-weight:bold; cursor:pointer;
+            transition:background .2s;
+        }
+        button:hover { background:#6a1b9a; }
+        a.home { display:block; text-align:center; margin-top:20px; color:#6a1b9a; text-decoration:none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nuevo Producto</h1>
+        <p class="sub">Completa el formulario para registrar o actualizar stock</p>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar</button>
+        </form>
+
+        <a href="{% url 'inventory_display' %}" class="home">⬅ Volver al Inventario</a>
+    </div>
+</body>
+</html>
