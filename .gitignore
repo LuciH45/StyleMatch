@@ -1,0 +1,22 @@
+Hay muchos archivos y directorios que no deberían estar en tu repositorio de Git. Aquí tienes un código de **.gitignore** de ejemplo, muy común para proyectos de Django. Simplemente copia y pega este contenido en el archivo que acabas de crear.
+
+```
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Base de datos local de Django
+db.sqlite3
+
+# Archivos de entorno virtual
+venv/
+env/
+
+# Directorios de medios y archivos estáticos (si no se confirman)
+media/
+static/
+
+# Archivos de configuración y claves sensibles
+.env
+.DS_Store
+```

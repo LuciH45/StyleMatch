@@ -43,6 +43,23 @@
         .btn-del{ background:#8E24AA; color:#fff; }
         .btn-del:hover{ background:#6A1B9A; }
         .back{ display:block; margin:30px auto 0; width:fit-content; text-decoration:none; color:#6a1b9a; font-weight:bold; }
+        /* Estilo para el botón de logout */
+        .logout-btn-form {
+            display: block; 
+            margin: 30px auto 0; 
+            width: fit-content;
+        }
+        .logout-btn-form button {
+            border: none;
+            background: none;
+            color: #6a1b9a;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .logout-btn-form button:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +108,9 @@
         {% endfor %}
     </div>
 
-    <a href="{% url 'home' %}" class="back">⬅ Volver al inicio</a>
+    <form action="{% url 'logout' %}" method="post" class="logout-btn-form">
+        {% csrf_token %}
+        <button type="submit">⬅ Volver al inicio</button>
+    </form>
 </body>
 </html>

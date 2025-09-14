@@ -55,7 +55,7 @@ ROOT_URLCONF = 'stylematch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,3 +132,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 # MENSAJES BOOTSTRAP FRIENDLY (opcional)
 # ==============================
 from django.contrib.messages import constants as messages
+
+# Configuración para la redirección después del login
+LOGIN_URL = '/cuentas/login/'
+LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'inventory_display'

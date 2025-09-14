@@ -3,14 +3,18 @@ from django.contrib import messages
 from .forms import ProductEntryForm
 from .models import Product
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+# Función para verificar si el usuario es un administrador (staff)
+def is_staff(user):
+    return user.is_staff
 
 def home(request):
     return render(request, "home.html")
-
-
+@login_required
 def inventory_display(request):
-    query = request.GET.get("q")  # término de búsqueda
-    category = request.GET.get("category")  # categoría seleccionada
+    query = request.GET.get("q")
+    category = request.GET.get("category")
 
     products = Product.objects.all().order_by("name")
 
@@ -29,6 +33,10 @@ def inventory_display(request):
         "categories": Product.CATEGORY_CHOICES,
     })
 
+# --- Vistas protegidas para administradores ---
+
+@login_required
+@user_passes_test(is_staff)
 def product_entry(request):
     if request.method == "POST":
         form = ProductEntryForm(request.POST, request.FILES)
@@ -39,7 +47,6 @@ def product_entry(request):
             quantity = form.cleaned_data["quantity"]
             image = form.cleaned_data.get("image")
 
-            # Verificar si ya existe
             product, created = Product.objects.get_or_create(
                 name=name,
                 defaults={
@@ -50,7 +57,6 @@ def product_entry(request):
                 }
             )
             if not created:
-                # Producto ya existía → sumar unidades
                 product.quantity += quantity
                 if description:
                     product.description = description
@@ -60,12 +66,14 @@ def product_entry(request):
                 messages.success(request, f"Se añadieron {quantity} unidades a {product.name}.")
             else:
                 messages.success(request, f"Producto {product.name} creado con éxito.")
-
+            
             return redirect("inventory_display")
     else:
         form = ProductEntryForm()
     return render(request, "product_entry.html", {"form": form})
 
+@login_required
+@user_passes_test(is_staff)
 def add_unit(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     product.quantity += 1
@@ -73,6 +81,8 @@ def add_unit(request, product_id):
     messages.success(request, f"Se añadió 1 unidad a {product.name}.")
     return redirect("inventory_display")
 
+@login_required
+@user_passes_test(is_staff)
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     messages.success(request, f"Producto {product.name} eliminado.")

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="logo">
+        <h1 style="color:#6A1B9A;">StyleMatch</h1>
+    </div>
+    
+    <h2>Iniciar Sesión</h2>
+    
+    {% if form.non_field_errors %}
+        <div style="color:red; margin-bottom:15px;">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="{{ form.username.id_for_label }}">Usuario:</label>
+        {{ form.username }}
+        
+        <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+        {{ form.password }}
+        
+        <button type="submit">Login</button>
+    </form>
+    <p style="text-align:center; margin-top:15px;">
+        ¿No tienes una cuenta? <a href="#">Regístrate</a>
+    </p>
+</div>
+{% endblock %}
