@@ -23,6 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('cuentas/', include('django.contrib.auth.urls')),
     path("", include("inventory.urls")),
+    path('cart/', include('cart.urls')),  # <--- agrega esta línea
 ]
 
 if settings.DEBUG:

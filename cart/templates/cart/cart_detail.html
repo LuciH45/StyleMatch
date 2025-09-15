@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width:700px;margin:30px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #ccc;padding:32px;">
+    <h2 style="color:#5E35B1;text-align:center;margin-bottom:24px;">🛒 Carrito de compras</h2>
+    {% if cart|length == 0 %}
+        <p style="text-align:center;">Tu carrito está vacío.</p>
+    {% else %}
+        <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+            <tr style="background:#ede7f6;">
+                <th style="padding:8px;">Producto</th>
+                <th style="padding:8px;">Cantidad</th>
+                <th style="padding:8px;">Precio unitario</th>
+                <th style="padding:8px;">Total</th>
+                <th style="padding:8px;">Acción</th>
+            </tr>
+            {% for item in cart %}
+            <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:8px;">{{ item.product.name }}</td>
+                <td style="padding:8px;text-align:center;">{{ item.quantity }}</td>
+                <td style="padding:8px;">${{ item.price }}</td>
+                <td style="padding:8px;">${{ item.total_price }}</td>
+                <td style="padding:8px;">
+                    <a href="{% url 'cart_remove' item.product.id %}" style="color:#fff;background:#8E24AA;padding:6px 12px;border-radius:6px;text-decoration:none;">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="text-align:right;font-size:1.2em;"><strong>Total del carrito:</strong> ${{ cart.get_total_price }}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <a href="{% url 'cart_clear' %}" style="background:#E57373;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">Vaciar carrito</a>
+            <a href="{% url 'inventory_display' %}" style="background:#5E35B1;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">← Seguir comprando</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
