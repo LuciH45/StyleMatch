@@ -43,3 +43,8 @@ python manage.py runserver
 Una vez que el servidor esté corriendo, accede a la siguiente dirección para usar StyleMatch:
 
 [http://localhost:8000](http://localhost:8000)
+
+Para entrar a la aplicación debe usar la siguiente información de usuario:
+
+**Usuario**:juancaciguz
+**Contraseña**: 123
