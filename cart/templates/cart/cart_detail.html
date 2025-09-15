@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block content %}
 <div style="max-width:700px;margin:30px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #ccc;padding:32px;">
@@ -18,15 +19,15 @@
             <tr style="border-bottom:1px solid #eee;">
                 <td style="padding:8px;">{{ item.product.name }}</td>
                 <td style="padding:8px;text-align:center;">{{ item.quantity }}</td>
-                <td style="padding:8px;">${{ item.price }}</td>
-                <td style="padding:8px;">${{ item.total_price }}</td>
+                <td style="padding:8px;">${{ item.price|floatformat:3|intcomma }}</td>
+                <td style="padding:8px;">${{ item.total_price|floatformat:3|intcomma }}</td>
                 <td style="padding:8px;">
                     <a href="{% url 'cart_remove' item.product.id %}" style="color:#fff;background:#8E24AA;padding:6px 12px;border-radius:6px;text-decoration:none;">Eliminar</a>
                 </td>
             </tr>
             {% endfor %}
         </table>
-        <p style="text-align:right;font-size:1.2em;"><strong>Total del carrito:</strong> ${{ cart.get_total_price }}</p>
+        <p style="text-align:right;font-size:1.2em;"><strong>Total del carrito:</strong> ${{ cart.get_total_price|floatformat:3|intcomma }}</p>
         <div style="display:flex;justify-content:space-between;align-items:center;">
             <a href="{% url 'cart_clear' %}" style="background:#E57373;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">Vaciar carrito</a>
             <a href="{% url 'inventory_display' %}" style="background:#5E35B1;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">← Seguir comprando</a>

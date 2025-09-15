@@ -51,13 +51,8 @@ class Cart:
         self.save()
 
     def __iter__(self):
-        """
-        Itera items y agrega la instancia Product (si está disponible)
-        y el total por ítem ya calculado (Decimal).
-        """
         product_ids = list(self.cart.keys())
         if Product is None:
-            # Si el import no se configuró, devolvemos solo datos desde la sesión
             for pid, item in self.cart.items():
                 price = Decimal(item['price'])
                 qty = int(item['quantity'])
@@ -65,9 +60,9 @@ class Cart:
                     'product': None,
                     'id': pid,
                     'name': item.get('name', ''),
-                    'price': price.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                    'price': price.quantize(Decimal('0.001'), rounding=ROUND_HALF_UP),  # <-- 3 decimales
                     'quantity': qty,
-                    'total_price': (price * qty).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                    'total_price': (price * qty).quantize(Decimal('0.001'), rounding=ROUND_HALF_UP)  # <-- 3 decimales
                 }
             return
 
@@ -81,9 +76,9 @@ class Cart:
                 'product': product,
                 'id': pid,
                 'name': item.get('name') or (product.name if product else ''),
-                'price': price.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                'price': price.quantize(Decimal('0.001'), rounding=ROUND_HALF_UP),  # <-- 3 decimales
                 'quantity': qty,
-                'total_price': (price * qty).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                'total_price': (price * qty).quantize(Decimal('0.001'), rounding=ROUND_HALF_UP)  # <-- 3 decimales
             }
 
     def __len__(self):
@@ -92,7 +87,7 @@ class Cart:
 
     def get_total_price(self):
         total = sum(Decimal(item['price']) * int(item['quantity']) for item in self.cart.values())
-        return total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        return total.quantize(Decimal('0.001'), rounding=ROUND_HALF_UP)  # <-- 3 decimales
 
     def get_distinct_items_count(self):
         return len(self.cart)
