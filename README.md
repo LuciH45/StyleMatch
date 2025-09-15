@@ -44,6 +44,7 @@ Una vez que el servidor esté corriendo, accede a la siguiente dirección para u
 
 [http://localhost:8000](http://localhost:8000)
 
+## Ingreso de usuario para la app
 Para entrar a la aplicación debe usar la siguiente información de usuario:
 
 **Usuario**:juancaciguz
