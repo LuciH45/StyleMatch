@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inventario</title>
+    <title data-i18n="title"></title>
     <style>
         body{ font-family:Arial, sans-serif; background:#ede7f6; margin:0; padding:20px; color:#4a148c; }
         h1{ text-align:center; margin-bottom:20px; }
@@ -43,7 +43,6 @@
         .btn-del{ background:#8E24AA; color:#fff; }
         .btn-del:hover{ background:#6A1B9A; }
         .back{ display:block; margin:30px auto 0; width:fit-content; text-decoration:none; color:#6a1b9a; font-weight:bold; }
-        /* Estilo para el botón de logout */
         .logout-btn-form {
             display: block; 
             margin: 30px auto 0; 
@@ -63,19 +62,26 @@
     </style>
 </head>
 <body>
-    <h1>Inventario de Ropa</h1>
+
+    <h1 data-i18n="inventory_title"></h1>
 
     <div class="top-actions">
-        <a href="{% url 'product_entry' %}">➕ Crear Producto</a>
-        <a href="{% url 'home' %}">🏠 Inicio</a>
+        <a href="{% url 'product_entry' %}" data-i18n="create_product"></a>
+        <a href="{% url 'home' %}" data-i18n="home"></a>
     </div>
 
     <!-- Buscador -->
     <form method="get" class="search-bar">
-        <input type="text" name="q" placeholder="Buscar por nombre..." value="{{ query|default:'' }}">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="" 
+            data-i18n-placeholder="search_placeholder"
+            value="{{ query|default:'' }}"
+        >
         
         <select name="category">
-            <option value="all">Todas las categorías</option>
+            <option value="all" data-i18n="all_categories"></option>
             {% for code, label in categories %}
                 <option value="{{ code }}" {% if category == code %}selected{% endif %}>
                     {{ label }}
@@ -83,9 +89,10 @@
             {% endfor %}
         </select>
 
-        <button type="submit">🔍 Buscar</button>
+        <button type="submit" data-i18n="search"></button>
+
         {% if query or category %}
-            <a href="{% url 'inventory_display' %}" class="clear">✖ Limpiar</a>
+            <a href="{% url 'inventory_display' %}" class="clear" data-i18n="clear"></a>
         {% endif %}
     </form>
 
@@ -95,24 +102,34 @@
             {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% endif %}
+
             <h2>{{ product.name }}</h2>
-            <p><strong>Categoría:</strong> {{ product.get_category_display }}</p>
-            <p><strong>Unidades:</strong> {{ product.quantity }}</p>
-            <p><strong>Precio:</strong> ${{ product.price }}</p>
+
+            <p><strong data-i18n="category"></strong> {{ product.get_category_display }}</p>
+            <p><strong data-i18n="units"></strong> {{ product.quantity }}</p>
+            <p><strong data-i18n="price"></strong> ${{ product.price }}</p>
+
             <p>{{ product.description }}</p>
 
-            <a href="{% url 'add_unit' product.id %}" class="btn btn-add">➕ Agregar unidad</a>
-            <a href="{% url 'delete_product' product.id %}" class="btn btn-del" onclick="return confirm('¿Eliminar {{ product.name }}?')">🗑 Eliminar</a>
-            <a href="{% url 'cart_add' product.id %}" class="btn btn-add">🛒 Agregar al carrito</a>
+            <a href="{% url 'add_unit' product.id %}" class="btn btn-add" data-i18n="add_unit"></a>
+            <a href="{% url 'delete_product' product.id %}" class="btn btn-del" onclick="return confirm('¿Eliminar {{ product.name }}?')" data-i18n="delete"></a>
+            <a href="{% url 'cart_add' product.id %}" class="btn btn-add" data-i18n="add_cart"></a>
         </div>
         {% empty %}
-        <p style="grid-column:1/-1;text-align:center;">No hay productos registrados.</p>
+        <p style="grid-column:1/-1;text-align:center;" data-i18n="no_products"></p>
         {% endfor %}
     </div>
 
     <form action="{% url 'logout' %}" method="post" class="logout-btn-form">
         {% csrf_token %}
-        <button type="submit">⬅ Volver al inicio</button>
+        <button type="submit" data-i18n="logout"></button>
     </form>
+
+    <script src="/static/lang/lang.js"></script>
+
+    <script>
+        loadLanguage("inventory");
+    </script>
+
 </body>
 </html>

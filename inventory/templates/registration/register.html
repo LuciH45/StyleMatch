@@ -102,14 +102,18 @@
 
         <h1 class="app-title">StyleMatch</h1>
 
-        <h2 class="form-heading">Crear Cuenta</h2>
+        <!-- Título traducido -->
+        <h2 class="form-heading" data-i18n="create_account"></h2>
 
         <form method="post" class="auth-form">
             {% csrf_token %}
 
             {% for field in form %}
                 <div class="form-field">
-                    {{ field.label_tag }}
+
+                    <!-- Traducción del label -->
+                    <label data-i18n="field_{{ field.name }}">{{ field.label }}</label>
+
                     {{ field }}
 
                     {% if field.errors %}
@@ -122,14 +126,20 @@
                 </div>
             {% endfor %}
 
-            <button type="submit" class="submit-button">Registrar</button>
+            <button type="submit" class="submit-button" data-i18n="register_button"></button>
         </form>
 
         <div class="link-footer">
-            ¿Ya tienes una cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a>
+            <span data-i18n="have_account"></span>
+            <a href="{% url 'login' %}" data-i18n="login_link"></a>
         </div>
 
     </div>
 </div>
+
+<!-- Cargar traducciones específicas de REGISTER -->
+<script>
+    loadLanguage("register");
+</script>
 
 {% endblock %}

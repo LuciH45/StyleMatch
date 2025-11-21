@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio</title>
+    <title></title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +21,24 @@
             border-radius: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,.15);
             text-align: center;
+            position: relative;
         }
+
+        /* Selector de idioma */
+        .lang-selector {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #7e57c2;
+            font-weight: bold;
+            color: #4a148c;
+        }
+
         h1 {
             margin-bottom: 20px;
             font-size: 32px;
@@ -38,11 +56,39 @@
         }
         a:hover { background: #5e35b1; }
     </style>
+
+    <script src="/static/lang/lang.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <h1>👗 StyleMatch</h1>
-        <a href="{% url 'inventory_display' %}">📦 Inventario</a>
+
+        <!-- Selector de idioma -->
+        <div class="lang-selector">
+            <select id="languageSwitcher">
+                <option value="es">🇪🇸 Español</option>
+                <option value="en">🇺🇸 English</option>
+            </select>
+        </div>
+
+        <h1 data-i18n="app_name"></h1>
+        <a data-i18n="inventory" href="{% url 'inventory_display' %}"></a>
     </div>
+
+    <script>
+        // Cargar idioma para HOME
+        loadLanguage("home");
+
+        // Aplicar el valor guardado en localStorage al selector
+        document.getElementById("languageSwitcher").value =
+            localStorage.getItem("lang") || navigator.language.split("-")[0];
+
+        // Detectar cambio de idioma
+        document.getElementById("languageSwitcher").addEventListener("change", function() {
+            localStorage.setItem("lang", this.value);
+            loadLanguage("home"); // recarga las traducciones
+        });
+    </script>
+
 </body>
 </html>

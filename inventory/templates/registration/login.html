@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Iniciar Sesión{% endblock %}
+{% block title %}
+Login
+{% endblock %}
 
 {% block content %}
 <div class="form-container">
+
     <div class="logo">
         <h1 style="color:#6A1B9A;">StyleMatch</h1>
     </div>
-    
-    <h2>Iniciar Sesión</h2>
-    
+
+    <h2 data-i18n="login_header"></h2>
+
     {% if form.non_field_errors %}
         <div style="color:red; margin-bottom:15px;">
             {% for error in form.non_field_errors %}
@@ -20,16 +23,25 @@
 
     <form method="post">
         {% csrf_token %}
-        <label for="{{ form.username.id_for_label }}">Usuario:</label>
+
+        <label for="{{ form.username.id_for_label }}" data-i18n="username_label"></label>
         {{ form.username }}
-        
-        <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+
+        <label for="{{ form.password.id_for_label }}" data-i18n="password_label"></label>
         {{ form.password }}
-        
-        <button type="submit">Login</button>
+
+        <button type="submit" data-i18n="login_button"></button>
     </form>
+
     <p style="text-align:center; margin-top:15px;">
-        ¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate</a>
+        <span data-i18n="no_account"></span>
+        <a href="{% url 'register' %}" data-i18n="register_link"></a>
     </p>
 </div>
+
+<!-- Cargar traducciones específicas de LOGIN -->
+<script>
+    loadLanguage("login");
+</script>
+
 {% endblock %}
