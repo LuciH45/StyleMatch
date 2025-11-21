@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
@@ -10,6 +11,7 @@ class Product(models.Model):
         ("accesorio", "Accesorio"),
     ]
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
@@ -19,3 +21,35 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.category})"
+
+
+class UserProfile(models.Model):
+    SKIN_TONE_CHOICES = [
+        ('claro', 'Claro'),
+        ('medio', 'Medio'),
+        ('oscuro', 'Oscuro'),
+    ]
+
+    STYLE_CHOICES = [
+        ('casual', 'Casual'),
+        ('formal', 'Formal'),
+        ('deportivo', 'Deportivo'),
+        ('bohemio', 'Bohemio'),
+    ]
+    # Relación uno a uno con el usuario predeterminado de Django
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    # Campos adicionales
+    skin_tone = models.CharField(
+        max_length=10, 
+        choices=SKIN_TONE_CHOICES,
+        default='medio'
+    )
+    style_preferences = models.CharField(
+        max_length=15,
+        choices=STYLE_CHOICES,
+        default='casual'
+    )
+
+    def __str__(self):
+        return f'Perfil de {self.user.username}'
