@@ -1,0 +1,18 @@
+{
+    "title": "Inventory",
+    "inventory_title": "Clothing Inventory",
+    "create_product": "➕ Create Product",
+    "home": "🏠 Home",
+    "search_placeholder": "Search by name...",
+    "all_categories": "All categories",
+    "search": "🔍 Search",
+    "clear": "✖ Clear",
+    "category": "Category:",
+    "units": "Units:",
+    "price": "Price:",
+    "add_unit": "➕ Add unit",
+    "delete": "🗑 Delete",
+    "add_cart": "🛒 Add to cart",
+    "no_products": "No products found.",
+    "logout": "⬅ Back to home"
+}
