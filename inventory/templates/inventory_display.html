@@ -120,6 +120,30 @@
         {% endfor %}
     </div>
 
+    {% if page_obj.has_other_pages %}
+    <div style="text-align:center; margin-top:30px;">
+        {% if page_obj.has_previous %}
+            <a 
+                href="?{% if query %}q={{ query }}&{% endif %}{% if category %}category={{ category }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                class="clear"
+                style="margin-right:10px;"
+            >&laquo; Anterior</a>
+        {% endif %}
+
+        <span style="font-weight:bold; color:#4a148c;">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a 
+                href="?{% if query %}q={{ query }}&{% endif %}{% if category %}category={{ category }}&{% endif %}page={{ page_obj.next_page_number }}"
+                class="clear"
+                style="margin-left:10px;"
+            >Siguiente &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <form action="{% url 'logout' %}" method="post" class="logout-btn-form">
         {% csrf_token %}
         <button type="submit" data-i18n="logout"></button>

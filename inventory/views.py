@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from django.http import Http404
+from django.core.paginator import Paginator
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -17,6 +18,7 @@ def is_staff(user):
 
 def home(request):
     return render(request, "home.html")
+
 @login_required
 def inventory_display(request):
     query = request.GET.get("q")
@@ -32,8 +34,13 @@ def inventory_display(request):
     if category and category != "all":
         products = products.filter(category=category)
 
+    paginator = Paginator(products, 8)  # 8 productos por página
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "inventory_display.html", {
-        "products": products,
+        "products": page_obj,    
+        "page_obj": page_obj,    
         "query": query,
         "category": category,
         "categories": Product.CATEGORY_CHOICES,
