@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'inventory',
     'cart',
     'django.contrib.humanize',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [

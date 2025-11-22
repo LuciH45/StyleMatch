@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from django.http import Http404
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import ProductSerializer
+
 # Función para verificar si el usuario es un administrador (staff)
 def is_staff(user):
     return user.is_staff
@@ -109,3 +113,9 @@ def register_view(request):
         form = RegistrationForm()
     
     return render(request, 'registration/register.html', {'form': form})
+
+@api_view(["GET"])
+def products_api(request):
+    products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True, context={"request": request})
+    return Response(serializer.data)
