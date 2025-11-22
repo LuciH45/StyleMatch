@@ -7,5 +7,7 @@
     "field_username": "Username",
     "field_password1": "Password",
     "field_password2": "Confirm Password",
-    "field_email": "Email"
+    "field_email": "Email",
+    "field_skin_tone": "Skin Tone",
+    "field_style_preferences": "Style Preferences"
 }
