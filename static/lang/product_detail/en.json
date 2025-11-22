@@ -1,0 +1,10 @@
+{
+    "product_detail_title": "Product Detail",
+    "category": "Category",
+    "price": "Price",
+    "units_available": "Units available",
+    "description": "Description",
+    "add_unit": "Add unit",
+    "add_cart": "Add to cart",
+    "back_inventory": "Back to inventory"
+}

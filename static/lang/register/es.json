@@ -1,0 +1,13 @@
+{
+    "create_account": "Crear Cuenta",
+    "register_button": "Registrar",
+    "have_account": "¿Ya tienes una cuenta?",
+    "login_link": "Iniciar Sesión",
+
+    "field_username": "Usuario",
+    "field_password1": "Contraseña",
+    "field_password2": "Confirmar Contraseña",
+    "field_email": "Correo Electrónico",
+    "field_skin_tone": "Tono de piel",
+    "field_style_preferences": "Preferencias de estilo"
+}

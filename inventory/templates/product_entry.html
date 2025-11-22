@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Nuevo Producto</title>
+    <title data-i18n="title"></title>
+
     <style>
         body { font-family: Arial, sans-serif; background:#f3e5f5; margin:0; padding:20px; }
         .container {
@@ -28,19 +29,31 @@
         button:hover { background:#6a1b9a; }
         a.home { display:block; text-align:center; margin-top:20px; color:#6a1b9a; text-decoration:none; }
     </style>
+
+    <script src="/static/lang/lang.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <h1>Nuevo Producto</h1>
-        <p class="sub">Completa el formulario para registrar o actualizar stock</p>
+        <h1 data-i18n="title_page"></h1>
+        <p class="sub" data-i18n="subtitle"></p>
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Guardar</button>
+            {% for field in form %}
+                <div class="form-field">
+                    <label data-i18n="field_{{ field.name }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" data-i18n="save"></button>
         </form>
 
-        <a href="{% url 'inventory_display' %}" class="home">⬅ Volver al Inventario</a>
+        <a href="{% url 'inventory_display' %}" class="home" data-i18n="back_inventory"></a>
     </div>
+
+    <script>
+        loadLanguage("product_entry");
+    </script>
 </body>
 </html>

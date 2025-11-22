@@ -1,0 +1,14 @@
+{
+    "title": "New Product",
+    "title_page": "New Product",
+    "subtitle": "Fill out the form to register or update stock",
+    "save": "Save",
+    "back_inventory": "⬅ Back to Inventory",
+
+    "field_name": "Clothing Name",
+    "field_category": "Category",
+    "field_description": "Description",
+    "field_quantity": "Initial Units",
+    "field_image": "Image",
+    "field_price": "Price"
+}

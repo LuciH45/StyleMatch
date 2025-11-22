@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n="product_detail_title"></title>
+
+    <style>
+        body { font-family: Arial, sans-serif; background:#ede7f6; margin:0; padding:20px; color:#4a148c; }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 { text-align: center; }
+
+        .info p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+
+        .btn {
+            display: block;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 12px 0;
+            text-decoration: none;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .btn-unit { background:#5E35B1; }
+        .btn-cart { background:#7E57C2; }
+        .btn-back { background:#8E24AA; }
+
+        .btn:hover { opacity: 0.85; }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% endif %}
+
+        <h1>{{ product.name }}</h1>
+
+        <div class="info">
+            <p><strong data-i18n="category"></strong> {{ product.get_category_display }}</p>
+            <p><strong data-i18n="price"></strong> ${{ product.price }}</p>
+            <p><strong data-i18n="units_available"></strong> {{ product.quantity }}</p>
+            <p><strong data-i18n="description"></strong></p>
+            <p>{{ product.description }}</p>
+        </div>
+
+        <a href="{% url 'add_unit' product.id %}" class="btn btn-unit" data-i18n="add_unit"></a>
+        <a href="{% url 'cart_add' product.id %}" class="btn btn-cart" data-i18n="add_cart"></a>
+        <a href="{% url 'inventory_display' %}" class="btn btn-back" data-i18n="back_inventory"></a>
+
+    </div>
+
+    <script src="/static/lang/lang.js"></script>
+    <script>
+        loadLanguage("product_detail");
+    </script>
+
+</body>
+</html>

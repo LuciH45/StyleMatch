@@ -1,0 +1,14 @@
+{
+    "title": "Nuevo Producto",
+    "title_page": "Nuevo Producto",
+    "subtitle": "Completa el formulario para registrar o actualizar stock",
+    "save": "Guardar",
+    "back_inventory": "⬅ Volver al Inventario",
+    
+    "field_name": "Nombre de la prenda",
+    "field_category": "Categoría",
+    "field_description": "Descripción",
+    "field_quantity": "Unidades iniciales",
+    "field_image": "Imagen",
+    "field_price": "Precio"
+}

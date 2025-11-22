@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@%fk)2_wvskw_x%pbg7840ti1y3g-mr^b!q7ts$m#u-5cpf%ey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*",]
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'inventory',
     'cart',
     'django.contrib.humanize',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -120,7 +121,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

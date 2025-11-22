@@ -1,0 +1,19 @@
+{
+    "title": "Inventario",
+    "inventory_title": "Inventario de Ropa",
+    "create_product": "➕ Crear Producto",
+    "home": "🏠 Inicio",
+    "search_placeholder": "Buscar por nombre...",
+    "all_categories": "Todas las categorías",
+    "search": "🔍 Buscar",
+    "clear": "✖ Limpiar",
+    "category": "Categoría:",
+    "units": "Unidades:",
+    "price": "Precio:",
+    "add_unit": "➕ Agregar unidad",
+    "delete": "🗑 Eliminar",
+    "add_cart": "🛒 Agregar al carrito",
+    "no_products": "No hay productos registrados.",
+    "logout": "⬅ Volver al inicio",
+    "view_details": "Ver detalles"
+}

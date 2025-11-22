@@ -1,0 +1,9 @@
+{
+    "login_title": "Iniciar Sesión",
+    "login_header": "Iniciar Sesión",
+    "username_label": "Usuario:",
+    "password_label": "Contraseña:",
+    "login_button": "Entrar",
+    "no_account": "¿No tienes una cuenta?",
+    "register_link": "Regístrate"
+}

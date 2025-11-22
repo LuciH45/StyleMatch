@@ -14,7 +14,6 @@ env/
 
 # Directorios de medios y archivos estáticos (si no se confirman)
 media/
-static/
 
 # Archivos de configuración y claves sensibles
 .env
