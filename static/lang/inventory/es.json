@@ -14,5 +14,6 @@
     "delete": "🗑 Eliminar",
     "add_cart": "🛒 Agregar al carrito",
     "no_products": "No hay productos registrados.",
-    "logout": "⬅ Volver al inicio"
+    "logout": "⬅ Volver al inicio",
+    "view_details": "Ver detalles"
 }

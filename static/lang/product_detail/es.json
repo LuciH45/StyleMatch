@@ -1,0 +1,10 @@
+{
+    "product_detail_title": "Detalle del Producto",
+    "category": "Categoría",
+    "price": "Precio",
+    "units_available": "Unidades disponibles",
+    "description": "Descripción",
+    "add_unit": "Agregar unidad",
+    "add_cart": "Añadir al carrito",
+    "back_inventory": "Volver al inventario"
+}

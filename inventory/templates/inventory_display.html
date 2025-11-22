@@ -106,14 +106,15 @@
             <h2>{{ product.name }}</h2>
 
             <p><strong data-i18n="category"></strong> {{ product.get_category_display }}</p>
-            <p><strong data-i18n="units"></strong> {{ product.quantity }}</p>
             <p><strong data-i18n="price"></strong> ${{ product.price }}</p>
 
-            <p>{{ product.description }}</p>
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-add" data-i18n="view_details"></a>
 
-            <a href="{% url 'add_unit' product.id %}" class="btn btn-add" data-i18n="add_unit"></a>
-            <a href="{% url 'delete_product' product.id %}" class="btn btn-del" onclick="return confirm('¿Eliminar {{ product.name }}?')" data-i18n="delete"></a>
-            <a href="{% url 'cart_add' product.id %}" class="btn btn-add" data-i18n="add_cart"></a>
+            <a href="{% url 'delete_product' product.id %}" 
+            class="btn btn-del" 
+            onclick="return confirm('¿Eliminar {{ product.name }}?')" 
+            data-i18n="delete"></a>
+
         </div>
         {% empty %}
         <p style="grid-column:1/-1;text-align:center;" data-i18n="no_products"></p>

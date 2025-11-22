@@ -14,5 +14,6 @@
     "delete": "🗑 Delete",
     "add_cart": "🛒 Add to cart",
     "no_products": "No products found.",
-    "logout": "⬅ Back to home"
+    "logout": "⬅ Back to home",
+    "view_details": "View details"
 }

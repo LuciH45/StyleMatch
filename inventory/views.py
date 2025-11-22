@@ -46,6 +46,11 @@ def inventory_display(request):
         "categories": Product.CATEGORY_CHOICES,
     })
 
+@login_required
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id, user=request.user)
+    return render(request, "product_detail.html", {"product": product})
+
 # --- Vistas protegidas para administradores ---
 
 @login_required
