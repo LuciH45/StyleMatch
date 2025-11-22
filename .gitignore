@@ -12,9 +12,6 @@ db.sqlite3
 venv/
 env/
 
-# Directorios de medios y archivos estáticos (si no se confirman)
-media/
-
 # Archivos de configuración y claves sensibles
 .env
 .DS_Store
