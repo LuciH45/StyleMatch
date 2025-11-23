@@ -108,12 +108,21 @@
             <p><strong data-i18n="category"></strong> {{ product.get_category_display }}</p>
             <p><strong data-i18n="price"></strong> ${{ product.price }}</p>
 
-            <a href="{% url 'product_detail' product.id %}" class="btn btn-add" data-i18n="view_details"></a>
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-add" data-i18n="view_details">Ver detalles</a>
+
+            <a href="{% url 'style_assistant_for_product' product.id %}" 
+            class="btn btn-add" 
+            style="background:#8E24AA;" 
+            data-i18n="style_assistant">
+                Asistente de estilo
+            </a>
 
             <a href="{% url 'delete_product' product.id %}" 
             class="btn btn-del" 
             onclick="return confirm('¿Eliminar {{ product.name }}?')" 
-            data-i18n="delete"></a>
+            data-i18n="delete">
+                Eliminar
+            </a>
 
         </div>
         {% empty %}

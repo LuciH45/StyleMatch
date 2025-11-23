@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import ProductEntryForm, RegistrationForm
-from .models import Product
+from .models import Product, UserProfile
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
@@ -11,6 +11,19 @@ from django.core.paginator import Paginator
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import ProductSerializer
+import os
+from google import genai
+from google.genai.errors import APIError
+
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
+
+if GEMINI_API_KEY:
+    client = genai.Client(api_key=GEMINI_API_KEY)
+else:
+    # Manejar si la clave no está configurada
+    client = None
+
 
 # Función para verificar si el usuario es un administrador (staff)
 def is_staff(user):
@@ -116,11 +129,9 @@ def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            # Guarda el usuario y el perfil (gracias al método save() personalizado en forms.py)
             user = form.save()
-            # Opcional: Inicia sesión automáticamente
             login(request, user)
-            return redirect('inventory_display') # Redirige a una página de inicio
+            return redirect('inventory_display')
     else:
         form = RegistrationForm()
     
@@ -131,3 +142,73 @@ def products_api(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True, context={"request": request})
     return Response(serializer.data)
+
+def style_assistant_view(request, product_id):
+
+    product = Product.objects.get(pk=product_id)
+    
+    product_title = product.name
+    product_description = product.description
+
+
+    user = request.user
+    
+    if user.is_authenticated:
+        
+        user_profile = get_object_or_404(UserProfile, user=user)
+        
+        
+        user_skin_color = user_profile.skin_tone 
+        user_style_prefs = user_profile.style_preferences
+
+    prompt = (
+        f"Actúa como un asistente de estilo personal altamente experimentado. "
+        f"Tu objetivo es crear un conjunto ('outfit') completo y armonioso. "
+        f"\n\n--- INSTRUCCIONES CLAVE ---"
+        f"\n1. El producto principal debe ser el centro del outfit."
+        f"\n2. El outfit debe complementar el color de piel y las preferencias del cliente."
+        f"\n3. Recomienda 3 prendas adicionales (ej: zapatos, pantalón, chaqueta) y 1 accesorio."
+        f"\n\n--- DATOS DEL PRODUCTO PRINCIPAL ---"
+        f"\nTítulo: '{product_title}'"
+        f"\nDescripción: '{product_description}'"
+        f"\n\n--- PERFIL DEL CLIENTE ---"
+        f"\nColor de piel: '{user_skin_color}'"
+        f"\nPreferencias de estilo: '{user_style_prefs}'"
+        f"\n\n--- RECOMENDACIÓN GENERADA ---"
+    )
+
+    ia_recommendation = "El Asistente de IA no está disponible."
+    
+    if client:
+        try:
+            # 'gemini-2.5-flash' es rápido y bueno para tareas de texto.
+            model = 'gemini-2.5-flash' 
+            
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt, 
+            )
+            
+            
+            ia_recommendation = response.text
+            
+        except APIError as e:
+            # Error específico de la API (ej: clave inválida, cuota excedida)
+            ia_recommendation = f"Error de la API de Gemini: {e}. Por favor, revisa tu clave y cuota."
+        except Exception as e:
+            # Otros errores (ej: problemas de red)
+            ia_recommendation = f"Ocurrió un error inesperado al generar la recomendación: {e}"
+    
+    
+    context = {
+        'page_title': f'Asistente de Estilo para {product_title}',
+        'product': product,
+        'product_id': product_id,
+        'user_skin_color': user_skin_color,
+        'user_style_prefs': user_style_prefs,
+        'prompt': prompt, 
+        'ia_recommendation': ia_recommendation, 
+    }
+    
+    
+    return render(request, 'style_assistant_template.html', context)

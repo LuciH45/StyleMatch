@@ -36,10 +36,10 @@ class UserProfile(models.Model):
         ('deportivo', 'Deportivo'),
         ('bohemio', 'Bohemio'),
     ]
-    # Relación uno a uno con el usuario predeterminado de Django
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
-    # Campos adicionales
+    
     skin_tone = models.CharField(
         max_length=10, 
         choices=SKIN_TONE_CHOICES,
