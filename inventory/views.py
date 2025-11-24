@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import ProductEntryForm, RegistrationForm
+from .forms import ProductEntryForm, RegistrationForm, UserProfileForm
 from .models import Product, UserProfile
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -35,6 +35,28 @@ def is_staff(user):
 
 def home(request):
     return render(request, "home.html")
+
+
+@login_required 
+def edit_user_profile(request):
+    
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        
+        form = UserProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Tu perfil ha sido actualizado exitosamente!')
+            return redirect('inventory_display') # Redirige al inventario
+    else:
+        form = UserProfileForm(instance=profile)
+
+    context = {
+        'form': form,
+        'page_title': 'Editar Perfil de Usuario'
+    }
+    return render(request, 'edit_profile.html', context)
 
 @login_required
 def inventory_display(request):
@@ -160,14 +182,10 @@ class ComplementaryProduct(BaseModel):
         description="Precio sugerido en formato decimal (ej: 150000.00 o 80.50). Debe ser razonable para un outfit completo."
     )
     
-    
-    # Restringida a un solo valor para simplificar
     suggested_category: CategoriaProducto = Field(
         description="Categoría del producto sugerido. DEBE ser 'outfit_completo'."
     )
     
-    # quantity (PositiveIntegerField) -> Unidades Iniciales
-    # Nuevo campo con valor fijo de 1
     initial_units: int = Field(
         default=1,
         description="Unidades iniciales del producto. DEBE ser siempre 1."
@@ -236,7 +254,6 @@ def style_assistant_view(request, product_id):
                 },
             )
             
-            # 1. Capturar el texto crudo de la respuesta para debugging
             # La respuesta de la IA (antes de la conversión a JSON)
             raw_ai_response = response.text 
             
@@ -244,7 +261,6 @@ def style_assistant_view(request, product_id):
             generated_product = json.loads(raw_ai_response)
             
         except json.JSONDecodeError as e:
-            # Error específico cuando el texto crudo no es un JSON válido
             error_message = f"Error de Deserialización JSON: La IA devolvió un formato inválido. Detalles: {e}"
         except Exception as e:
             error_message = f"Error Crítico de Deserialización o Red: {e}"
@@ -274,41 +290,32 @@ def save_ai_product(request):
     Añade validación de usuario y de campos críticos.
     """
     
-    # ----------------------------------------------
-    # 1. VERIFICACIÓN DE AUTENTICACIÓN (CRÍTICO)
-    # ----------------------------------------------
     if not request.user.is_authenticated:
-        # Usa el sistema de mensajes de Django para notificar al usuario (opcional)
         messages.error(request, "Debes iniciar sesión para añadir productos al inventario.")
         return redirect('inventory_display')
         
-    # ----------------------------------------------
-    # 2. Recoger datos y convertirlos
-    # ----------------------------------------------
     product_name = request.POST.get('name')
     product_description = request.POST.get('description')
     product_category = request.POST.get('category')
     
-    # Validación simple de campos críticos (nombre)
+
     if not product_name or not product_description:
         messages.error(request, "Error: El nombre o la descripción del producto generado están vacíos.")
         return redirect('inventory_display')
         
-    # Manejo de cantidad (seguro)
+
     try:
         product_quantity = int(request.POST.get('quantity', 1))
     except ValueError:
         product_quantity = 1
         
-    # Manejo de precio (seguro)
+
     try:
         product_price = Decimal(request.POST.get('price', '0.00')) 
     except Exception:
         product_price = Decimal('0.00')
 
-    # ----------------------------------------------
-    # 3. Crear y guardar el nuevo objeto Product
-    # ----------------------------------------------
+
     try:
         Product.objects.create(
             user=request.user, 
@@ -320,11 +327,9 @@ def save_ai_product(request):
         )
         messages.success(request, f"🎉 ¡Producto '{product_name}' añadido exitosamente por la IA!")
         
-        # Redirigir
         return redirect('inventory_display')
         
     except Exception as e:
-        # Captura errores de la base de datos (ej: restricción UNIQUE para el nombre)
         error_msg = f"Error al guardar el producto en la base de datos: {e}"
         print(error_msg)
         messages.error(request, "Error al guardar el producto. ¿Ya existe un producto con este nombre?")

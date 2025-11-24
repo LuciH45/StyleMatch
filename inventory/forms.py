@@ -35,7 +35,6 @@ class RegistrationForm(UserCreationForm):
 
     # Método para guardar el usuario y el perfil
     def save(self, commit=True):
-        # 1. Guarda el objeto User
         user = super().save(commit=False)
         if commit:
             user.save()
@@ -47,3 +46,19 @@ class RegistrationForm(UserCreationForm):
             style_preferences=self.cleaned_data.get('style_preferences')
         )
         return user
+    
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['skin_tone', 'style_preferences']
+        
+        labels = {
+            'skin_tone': 'Tono de Piel',
+            'style_preferences': 'Preferencias de Estilo',
+        }
+        
+        widgets = {
+            'skin_tone': forms.Select(choices=UserProfile.SKIN_TONE_CHOICES),
+            'style_preferences': forms.Select(choices=UserProfile.STYLE_CHOICES),
+        }
