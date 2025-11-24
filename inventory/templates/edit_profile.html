@@ -1,25 +1,62 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{{ page_title }}</title>
+    <title data-i18n="page_title"></title>
+
     <style>
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #5E35B1; text-align: center; } /* Usando un color similar a tus botones */
+        .container { 
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            color: #5E35B1; 
+            text-align: center; 
+        }
         .form-row { margin-bottom: 15px; }
-        .form-row label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-row select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        .submit-btn { background: #5E35B1; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .form-row label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+        }
+        .form-row select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        }
+        .submit-btn { 
+            background: #5E35B1; 
+            color: white; 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #5E35B1;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="container">
-        <h1>✏️ {{ page_title }}</h1>
-        
+
+        <h1>✏️ <span data-i18n="page_title"></span></h1>
+
         {% if messages %}
             {% for message in messages %}
-                <div style="background: #E8F5E9; color: #388E3C; padding: 10px; border-radius: 4px; margin-bottom: 15px;">{{ message }}</div>
+                <div style="background: #E8F5E9; color: #388E3C; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+                    {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
 
@@ -28,19 +65,28 @@
             
             {% for field in form %}
                 <div class="form-row">
-                    {{ field.label_tag }}
+                    <label data-i18n="{{ field.name }}_label"></label>
                     {{ field }}
+                    
                     {% for error in field.errors %}
-                        <p style="color: red; font-size: 0.9em;">{{ error }}</p>
+                        <p style="color:red; font-size: 0.9em;">{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
 
-            <button type="submit" class="submit-btn">Guardar Cambios</button>
+            <button type="submit" class="submit-btn" data-i18n="save_changes"></button>
         </form>
-        
-        <p style="margin-top: 20px;"><a href="{% url 'inventory_display' %}">← Volver al Inventario</a></p>
+
+        <p style="margin-top: 20px;">
+            <a href="{% url 'inventory_display' %}" class="back-link" data-i18n="back_to_inventory"></a>
+        </p>
+
     </div>
+
+    <script src="/static/lang/lang.js"></script>
+    <script>
+        loadLanguage("user_profile");
+    </script>
 
 </body>
 </html>

@@ -15,5 +15,7 @@
     "add_cart": "🛒 Add to cart",
     "no_products": "No products found.",
     "logout": "⬅ Back to home",
-    "view_details": "View details"
+    "view_details": "View details",
+    "edit_user_info": "✏️ Edit user information",
+    "style_assistant": "🤖 Style Assistant"
 }

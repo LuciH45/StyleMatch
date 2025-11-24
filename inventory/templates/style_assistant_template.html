@@ -3,7 +3,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{{ page_title }} - Asistente de Estilo</title>
+    <title data-i18n="page_title"></title>
+
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -37,14 +38,12 @@
             padding: 10px;
             border-bottom: 1px dashed #e0e0e0;
         }
-        /* Estilo para el producto generado */
         .generated-box {
             background: #e3f2fd; 
             padding: 20px; 
             border-radius: 8px;
             margin-top: 20px;
         }
-        /* Estilo para el área de debugging */
         .debug-box {
             margin-top: 50px; 
             background: #fafafa; 
@@ -87,31 +86,32 @@
 <body>
 
     <div class="container">
-        <h1>{{ page_title }}</h1>
+
+        <h1 data-i18n="page_title"></h1>
         
         <p class="info-item">
-            <strong>ID del Producto Base:</strong> {{ product_id }}
+            <strong data-i18n="base_product_id"></strong> {{ product_id }}
         </p>
 
-        <h2>👤 Perfil del Cliente</h2>
+        <h2 data-i18n="client_profile"></h2>
         <div class="info-item">
-            <strong>Color de Piel:</strong> {{ user_skin_color }}<br>
-            <strong>Preferencias de Estilo:</strong> {{ user_style_prefs }}
+            <strong data-i18n="skin_color"></strong> {{ user_skin_color }}<br>
+            <strong data-i18n="style_preferences"></strong> {{ user_style_prefs }}
         </div>
         
         {% if generated_product %}
             
             <div class="generated-box">
-                <h2>✨ Producto Complementario Sugerido por la IA ✨</h2>
+                <h2 data-i18n="ai_suggested_product"></h2>
                 
                 <form method="post" action="{% url 'save_ai_product' %}">
                     {% csrf_token %}
 
-                    <p><strong>Título Sugerido:</strong> {{ generated_product.complementary_title }}</p>
-                    <p><strong>Descripción:</strong> {{ generated_product.complementary_description }}</p>
-                    <p><strong>Precio Sugerido:</strong> ${{ generated_product.suggested_price }}</p>
-                    <p><strong>Categoría:</strong> {{ generated_product.suggested_category }}</p>
-                    <p><strong>Unidades Iniciales:</strong> {{ generated_product.initial_units }}</p>
+                    <p><strong data-i18n="suggested_title"></strong> {{ generated_product.complementary_title }}</p>
+                    <p><strong data-i18n="suggested_description"></strong> {{ generated_product.complementary_description }}</p>
+                    <p><strong data-i18n="suggested_price"></strong> ${{ generated_product.suggested_price }}</p>
+                    <p><strong data-i18n="suggested_category"></strong> {{ generated_product.suggested_category }}</p>
+                    <p><strong data-i18n="initial_units"></strong> {{ generated_product.initial_units }}</p>
 
                     <hr>
 
@@ -121,42 +121,45 @@
                     <input type="hidden" name="category" value="{{ generated_product.suggested_category }}">
                     <input type="hidden" name="quantity" value="{{ generated_product.initial_units }}">
                     
-                    <button type="submit" style="background:#42a5f5; color:white;">
-                        Añadir a Inventario
-                    </button>
+                    <button type="submit" style="background:#42a5f5; color:white;" data-i18n="add_to_inventory"></button>
                 </form>
             </div>
 
         {% else %}
             
             <div class="error-box">
-                <h2>❌ Fallo en la Generación de Producto ❌</h2>
+                <h2 data-i18n="generation_failed"></h2>
                 {% if error_message %}
-                    <p><strong>Error Crítico Capturado:</strong> {{ error_message }}</p>
+                    <p><strong data-i18n="critical_error"></strong> {{ error_message }}</p>
                 {% else %}
-                    <p>La IA no pudo generar el objeto estructurado. Esto suele indicar un problema con la API Key, el esquema Pydantic, o que la respuesta de Gemini fue malformada.</p>
+                    <p data-i18n="generic_ai_error"></p>
                 {% endif %}
             </div>
 
         {% endif %}
         
-        <a href="{% url 'inventory_display' %}" class="back-link">← Volver al Inventario</a>
+        <a href="{% url 'inventory_display' %}" class="back-link" data-i18n="back_to_inventory"></a>
 
         <div class="debug-box">
-            <h3>📊 Debugging: Respuesta Cruda de Gemini y Prompt Enviado</h3>
+            <h3 data-i18n="debug_title"></h3>
             
             {% if raw_ai_response %}
-                <p><strong>Mensaje Crudo de la API:</strong></p>
+                <p><strong data-i18n="raw_api_message"></strong></p>
                 <pre>{{ raw_ai_response }}</pre>
             {% else %}
-                <p>No se pudo obtener una respuesta de la API.</p>
+                <p data-i18n="no_api_response"></p>
             {% endif %}
 
-            <p><strong>Prompt (Instrucción enviada):</strong></p>
+            <p><strong data-i18n="prompt_sent"></strong></p>
             <pre>{{ prompt_enviado }}</pre>
         </div>
 
     </div>
+
+    <script src="/static/lang/lang.js"></script>
+    <script>
+        loadLanguage("style_assistant");
+    </script>
 
 </body>
 </html>

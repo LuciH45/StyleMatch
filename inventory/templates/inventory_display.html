@@ -68,9 +68,7 @@
     <div class="top-actions">
         <a href="{% url 'product_entry' %}" data-i18n="create_product"></a>
         <a href="{% url 'home' %}" data-i18n="home"></a>
-        <a href="{% url 'edit_user_profile' %}" data-i18n="edit_user_info">
-        Editar información de usuario
-        </a>
+        <a href="{% url 'edit_user_profile' %}" data-i18n="edit_user_info"></a>
     </div>
 
     <!-- Buscador -->
@@ -116,16 +114,12 @@
             <a href="{% url 'style_assistant_for_product' product.id %}" 
             class="btn btn-add" 
             style="background:#8E24AA;" 
-            data-i18n="style_assistant">
-                Asistente de estilo
-            </a>
+            data-i18n="style_assistant"></a>
 
             <a href="{% url 'delete_product' product.id %}" 
             class="btn btn-del" 
             onclick="return confirm('¿Eliminar {{ product.name }}?')" 
-            data-i18n="delete">
-                Eliminar
-            </a>
+            data-i18n="delete"></a>
 
         </div>
         {% empty %}

@@ -15,5 +15,7 @@
     "add_cart": "🛒 Agregar al carrito",
     "no_products": "No hay productos registrados.",
     "logout": "⬅ Volver al inicio",
-    "view_details": "Ver detalles"
+    "view_details": "Ver detalles",
+    "edit_user_info": "✏️ Editar información de usuario",
+    "style_assistant": "🤖 Asistente de Estilo"
 }

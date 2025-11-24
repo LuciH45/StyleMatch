@@ -1,0 +1,17 @@
+{
+    "page_title": "Editar Perfil del Usuario",
+    "save_changes": "Guardar Cambios",
+    "back_to_inventory": "← Volver al Inventario",
+
+    "skin_tone_label": "Tono de Piel",
+    "style_preferences_label": "Preferencias de Estilo",
+
+    "skin_tone_claro": "Claro",
+    "skin_tone_medio": "Medio",
+    "skin_tone_oscuro": "Oscuro",
+
+    "style_casual": "Casual",
+    "style_formal": "Formal",
+    "style_deportivo": "Deportivo",
+    "style_bohemio": "Bohemio"
+}

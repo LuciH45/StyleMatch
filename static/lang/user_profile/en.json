@@ -1,0 +1,17 @@
+{
+    "page_title": "Edit User Profile",
+    "save_changes": "Save Changes",
+    "back_to_inventory": "← Back to Inventory",
+
+    "skin_tone_label": "Skin Tone",
+    "style_preferences_label": "Style Preferences",
+
+    "skin_tone_claro": "Light",
+    "skin_tone_medio": "Medium",
+    "skin_tone_oscuro": "Dark",
+
+    "style_casual": "Casual",
+    "style_formal": "Formal",
+    "style_deportivo": "Sporty",
+    "style_bohemio": "Bohemian"
+}

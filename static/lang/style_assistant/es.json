@@ -1,0 +1,27 @@
+{
+    "page_title": "Asistente de Estilo IA",
+    "base_product_id": "ID del Producto Base:",
+    "client_profile": "👤 Perfil del Cliente",
+    "skin_color": "Color de piel:",
+    "style_preferences": "Preferencias de estilo:",
+    "ai_suggested_product": "✨ Producto Complementario Sugerido por la IA ✨",
+
+    "suggested_title": "Título sugerido:",
+       "suggested_description": "Descripción:",
+    "suggested_price": "Precio sugerido:",
+    "suggested_category": "Categoría:",
+    "initial_units": "Unidades iniciales:",
+
+    "add_to_inventory": "Añadir al inventario",
+
+    "generation_failed": "❌ Fallo en la generación del producto ❌",
+    "critical_error": "Error crítico:",
+    "generic_ai_error": "La IA no pudo generar un objeto estructurado válido. Esto suele indicar un problema con la API Key, un esquema Pydantic inválido, o una respuesta malformada.",
+
+    "back_to_inventory": "← Volver al inventario",
+
+    "debug_title": "📊 Debug: Respuesta Cruda de Gemini y Prompt Enviado",
+    "raw_api_message": "Mensaje crudo de la API:",
+    "no_api_response": "No se pudo obtener una respuesta de la API.",
+    "prompt_sent": "Prompt enviado:"
+}
