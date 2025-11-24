@@ -14,4 +14,5 @@ urlpatterns = [
     path("style-assistant/<int:product_id>/", views.style_assistant_view, name="style_assistant_for_product"),
     path("save_ai_product/", views.save_ai_product, name="save_ai_product"),
     path("profile/edit/", views.edit_user_profile, name="edit_user_profile"),
+    path("aliados/", views.aliados_list, name="aliados_list"),
 ]

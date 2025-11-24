@@ -20,6 +20,8 @@ from decimal import Decimal
 from django.views.decorators.http import require_POST
 import json
 
+import requests
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
 
 if GEMINI_API_KEY:
@@ -36,6 +38,21 @@ def is_staff(user):
 def home(request):
     return render(request, "home.html")
 
+
+def aliados_list(request):
+    API_URL = "http://cosmetic-s-lac.shop/store/catalogo/api/products/"
+
+    try:
+        response = requests.get(API_URL, timeout=5)
+        response.raise_for_status()
+        productos = response.json()
+        productos = productos[:50]  # <-- limitar a 50
+    except Exception:
+        productos = []
+    
+    return render(request, "aliados_list.html", {
+        "productos": productos,
+    })
 
 @login_required 
 def edit_user_profile(request):
