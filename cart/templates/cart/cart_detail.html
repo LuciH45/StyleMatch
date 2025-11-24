@@ -6,6 +6,9 @@
     <h2 style="color:#5E35B1;text-align:center;margin-bottom:24px;">🛒 Carrito de compras</h2>
     {% if cart|length == 0 %}
         <p style="text-align:center;">Tu carrito está vacío.</p>
+        <div style="text-align:center;margin-top:20px;">
+            <a href="{% url 'inventory_display' %}" style="background:#5E35B1;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">Regresar al inventario</a>
+        </div>
     {% else %}
         <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
             <tr style="background:#ede7f6;">
@@ -28,9 +31,22 @@
             {% endfor %}
         </table>
         <p style="text-align:right;font-size:1.2em;"><strong>Total del carrito:</strong> ${{ cart.get_total_price|floatformat:3|intcomma }}</p>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
             <a href="{% url 'cart_clear' %}" style="background:#E57373;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">Vaciar carrito</a>
             <a href="{% url 'inventory_display' %}" style="background:#5E35B1;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">← Seguir comprando</a>
+            <!-- BOTÓN NUEVO: pasarela de pagos -->
+            <a href="{% url 'cart_checkout' %}" style="background:#43A047;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">Pagar ahora</a>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;margin-top:20px;">
+            <a href="{% url 'report_pdf' %}" 
+               style="background:#1976D2;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">
+                Descargar reporte PDF
+            </a>
+
+            <a href="{% url 'report_excel' %}" 
+               style="background:#00796B;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;">
+                Descargar reporte Excel
+            </a>
         </div>
     {% endif %}
 </div>

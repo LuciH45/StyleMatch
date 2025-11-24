@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width:640px;margin:40px auto;background:#fff;padding:28px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;">
+  <h2 style="color:#2E7D32;">Pago exitoso</h2>
+  <p>Gracias por tu compra. Se procesó un pago simulado por <strong>${{ total|floatformat:2 }}</strong>.</p>
+  <div style="margin-top:18px;">
+    <a href="{% url 'inventory_display' %}" style="background:#1976D2;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;">Regresar al inventario</a>
+  </div>
+</div>
+{% endblock %}
