@@ -12,4 +12,5 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path("api/products/", views.products_api),
     path("style-assistant/<int:product_id>/", views.style_assistant_view, name="style_assistant_for_product"),
+    path("save_ai_product/", views.save_ai_product, name="save_ai_product"),
 ]

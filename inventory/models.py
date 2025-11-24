@@ -9,6 +9,7 @@ class Product(models.Model):
         ("vestido", "Vestido"),
         ("calzado", "Calzado"),
         ("accesorio", "Accesorio"),
+        ("outfit_completo", "Outfit Completo"),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

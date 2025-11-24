@@ -14,7 +14,11 @@ from .serializers import ProductSerializer
 import os
 from google import genai
 from google.genai.errors import APIError
-
+from pydantic import BaseModel, Field
+from typing import Literal
+from decimal import Decimal
+from django.views.decorators.http import require_POST
+import json
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
 
@@ -137,6 +141,38 @@ def register_view(request):
     
     return render(request, 'registration/register.html', {'form': form})
 
+CategoriaProducto = Literal["outfit_completo"]
+
+class ComplementaryProduct(BaseModel):
+    """
+    Esquema para un producto generado por la IA que complementa el producto principal.
+    Variables en inglés para mejor integración backend.
+    """
+    
+    
+    complementary_title: str = Field(description="Título corto y creativo del nuevo producto sugerido.")
+    
+    
+    complementary_description: str = Field(description="Descripción detallada del conjunto, materiales y cómo combina con el perfil del cliente.")
+    
+    
+    suggested_price: Decimal = Field(
+        description="Precio sugerido en formato decimal (ej: 150000.00 o 80.50). Debe ser razonable para un outfit completo."
+    )
+    
+    
+    # Restringida a un solo valor para simplificar
+    suggested_category: CategoriaProducto = Field(
+        description="Categoría del producto sugerido. DEBE ser 'outfit_completo'."
+    )
+    
+    # quantity (PositiveIntegerField) -> Unidades Iniciales
+    # Nuevo campo con valor fijo de 1
+    initial_units: int = Field(
+        default=1,
+        description="Unidades iniciales del producto. DEBE ser siempre 1."
+    )
+
 @api_view(["GET"])
 def products_api(request):
     products = Product.objects.all()
@@ -149,6 +185,8 @@ def style_assistant_view(request, product_id):
     
     product_title = product.name
     product_description = product.description
+    product_category = product.get_category_display()
+    product_price = product.price
 
 
     user = request.user
@@ -161,43 +199,56 @@ def style_assistant_view(request, product_id):
         user_skin_color = user_profile.skin_tone 
         user_style_prefs = user_profile.style_preferences
 
-    prompt = (
-        f"Actúa como un asistente de estilo personal altamente experimentado. "
-        f"Tu objetivo es crear un conjunto ('outfit') completo y armonioso. "
-        f"\n\n--- INSTRUCCIONES CLAVE ---"
-        f"\n1. El producto principal debe ser el centro del outfit."
-        f"\n2. El outfit debe complementar el color de piel y las preferencias del cliente."
-        f"\n3. Recomienda 3 prendas adicionales (ej: zapatos, pantalón, chaqueta) y 1 accesorio."
+    new_product_prompt = (
+        f"Actúa como un diseñador de moda experto y crea un plan de venta para un nuevo producto. "
+        f"Tu tarea es diseñar un ÚNICO producto COMPLEMENTARIO que sea un 'Outfit Completo' "
+        f"que haga juego perfectamente con el producto principal y el perfil del cliente. "
+        f"El precio que sugieras debe ser un precio total y razonable para un conjunto completo."
         f"\n\n--- DATOS DEL PRODUCTO PRINCIPAL ---"
-        f"\nTítulo: '{product_title}'"
+        f"\nNombre: '{product_title}'"
+        f"\nCategoría: '{product_category}'"
         f"\nDescripción: '{product_description}'"
+        f"\nPrecio: ${product_price}"
         f"\n\n--- PERFIL DEL CLIENTE ---"
         f"\nColor de piel: '{user_skin_color}'"
         f"\nPreferencias de estilo: '{user_style_prefs}'"
-        f"\n\n--- RECOMENDACIÓN GENERADA ---"
+        f"\n\n--- FORMATO DE RESPUESTA REQUERIDO ---"
+        f"\nGenera la respuesta EXCLUSIVAMENTE como un objeto JSON con las siguientes claves en INGLÉS:"
+        f"\n- complementary_title: Título creativo (string)."
+        f"\n- complementary_description: Descripción detallada (string)."
+        f"\n- suggested_price: Precio decimal (ej: 150000.00)."
+        f"\n- suggested_category: DEBE ser 'outfit_completo' (string)."
+        f"\n- initial_units: DEBE ser 1 (número entero)."
     )
 
-    ia_recommendation = "El Asistente de IA no está disponible."
+    generated_product = None
+    error_message = None
+    raw_ai_response = "No se pudo conectar con la API."
     
     if client:
         try:
-            # 'gemini-2.5-flash' es rápido y bueno para tareas de texto.
-            model = 'gemini-2.5-flash' 
-            
             response = client.models.generate_content(
-                model=model,
-                contents=prompt, 
+                model='gemini-2.5-flash',
+                contents=new_product_prompt,
+                config={
+                    "response_mime_type": "application/json",
+                    "response_schema": ComplementaryProduct,
+                },
             )
             
+            # 1. Capturar el texto crudo de la respuesta para debugging
+            # La respuesta de la IA (antes de la conversión a JSON)
+            raw_ai_response = response.text 
             
-            ia_recommendation = response.text
+            # 2. Intentar la deserialización a objeto Python
+            generated_product = json.loads(raw_ai_response)
             
-        except APIError as e:
-            # Error específico de la API (ej: clave inválida, cuota excedida)
-            ia_recommendation = f"Error de la API de Gemini: {e}. Por favor, revisa tu clave y cuota."
+        except json.JSONDecodeError as e:
+            # Error específico cuando el texto crudo no es un JSON válido
+            error_message = f"Error de Deserialización JSON: La IA devolvió un formato inválido. Detalles: {e}"
         except Exception as e:
-            # Otros errores (ej: problemas de red)
-            ia_recommendation = f"Ocurrió un error inesperado al generar la recomendación: {e}"
+            error_message = f"Error Crítico de Deserialización o Red: {e}"
+            print(f"ERROR CRÍTICO: {e}")
     
     
     context = {
@@ -206,9 +257,76 @@ def style_assistant_view(request, product_id):
         'product_id': product_id,
         'user_skin_color': user_skin_color,
         'user_style_prefs': user_style_prefs,
-        'prompt': prompt, 
-        'ia_recommendation': ia_recommendation, 
+        'generated_product': generated_product, 
+        'prompt_enviado': new_product_prompt,
+        'raw_ai_response': raw_ai_response,
+        'error_message': error_message, 
     }
     
     
     return render(request, 'style_assistant_template.html', context)
+
+
+@require_POST
+def save_ai_product(request):
+    """
+    Guarda los datos recibidos del formulario del producto generado por la IA.
+    Añade validación de usuario y de campos críticos.
+    """
+    
+    # ----------------------------------------------
+    # 1. VERIFICACIÓN DE AUTENTICACIÓN (CRÍTICO)
+    # ----------------------------------------------
+    if not request.user.is_authenticated:
+        # Usa el sistema de mensajes de Django para notificar al usuario (opcional)
+        messages.error(request, "Debes iniciar sesión para añadir productos al inventario.")
+        return redirect('inventory_display')
+        
+    # ----------------------------------------------
+    # 2. Recoger datos y convertirlos
+    # ----------------------------------------------
+    product_name = request.POST.get('name')
+    product_description = request.POST.get('description')
+    product_category = request.POST.get('category')
+    
+    # Validación simple de campos críticos (nombre)
+    if not product_name or not product_description:
+        messages.error(request, "Error: El nombre o la descripción del producto generado están vacíos.")
+        return redirect('inventory_display')
+        
+    # Manejo de cantidad (seguro)
+    try:
+        product_quantity = int(request.POST.get('quantity', 1))
+    except ValueError:
+        product_quantity = 1
+        
+    # Manejo de precio (seguro)
+    try:
+        product_price = Decimal(request.POST.get('price', '0.00')) 
+    except Exception:
+        product_price = Decimal('0.00')
+
+    # ----------------------------------------------
+    # 3. Crear y guardar el nuevo objeto Product
+    # ----------------------------------------------
+    try:
+        Product.objects.create(
+            user=request.user, 
+            name=product_name,
+            description=product_description,
+            category=product_category,
+            quantity=product_quantity,
+            price=product_price,
+        )
+        messages.success(request, f"🎉 ¡Producto '{product_name}' añadido exitosamente por la IA!")
+        
+        # Redirigir
+        return redirect('inventory_display')
+        
+    except Exception as e:
+        # Captura errores de la base de datos (ej: restricción UNIQUE para el nombre)
+        error_msg = f"Error al guardar el producto en la base de datos: {e}"
+        print(error_msg)
+        messages.error(request, "Error al guardar el producto. ¿Ya existe un producto con este nombre?")
+        
+        return redirect('inventory_display')
