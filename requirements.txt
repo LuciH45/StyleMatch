@@ -4,3 +4,5 @@ requests
 djangorestframework
 gunicorn
 whitenoise
+google-genai
+python-dotenv

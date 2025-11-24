@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }} - Asistente de Estilo</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f5f5f5; 
+            padding: 30px; 
+            color: #333; 
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 { 
+            color: #4CAF50; 
+            border-bottom: 2px solid #E8F5E9;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 { 
+            color: #6d4c41; 
+            margin-top: 25px;
+            border-left: 5px solid #FFCC80;
+            padding-left: 10px;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        /* Estilo para el producto generado */
+        .generated-box {
+            background: #e3f2fd; 
+            padding: 20px; 
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        /* Estilo para el área de debugging */
+        .debug-box {
+            margin-top: 50px; 
+            background: #fafafa; 
+            padding: 20px; 
+            border: 1px dashed #ccc; 
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #90A4AE;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .error-box {
+            background: #ffebee; 
+            border: 1px solid #e57373; 
+            padding: 20px; 
+            border-radius: 8px; 
+            color: #b71c1c;
+        }
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>{{ page_title }}</h1>
+        
+        <p class="info-item">
+            <strong>ID del Producto Base:</strong> {{ product_id }}
+        </p>
+
+        <h2>👤 Perfil del Cliente</h2>
+        <div class="info-item">
+            <strong>Color de Piel:</strong> {{ user_skin_color }}<br>
+            <strong>Preferencias de Estilo:</strong> {{ user_style_prefs }}
+        </div>
+        
+        {% if generated_product %}
+            
+            <div class="generated-box">
+                <h2>✨ Producto Complementario Sugerido por la IA ✨</h2>
+                
+                <form method="post" action="{% url 'save_ai_product' %}">
+                    {% csrf_token %}
+
+                    <p><strong>Título Sugerido:</strong> {{ generated_product.complementary_title }}</p>
+                    <p><strong>Descripción:</strong> {{ generated_product.complementary_description }}</p>
+                    <p><strong>Precio Sugerido:</strong> ${{ generated_product.suggested_price }}</p>
+                    <p><strong>Categoría:</strong> {{ generated_product.suggested_category }}</p>
+                    <p><strong>Unidades Iniciales:</strong> {{ generated_product.initial_units }}</p>
+
+                    <hr>
+
+                    <input type="hidden" name="name" value="{{ generated_product.complementary_title }}">
+                    <input type="hidden" name="description" value="{{ generated_product.complementary_description }}">
+                    <input type="hidden" name="price" value="{{ generated_product.suggested_price }}">
+                    <input type="hidden" name="category" value="{{ generated_product.suggested_category }}">
+                    <input type="hidden" name="quantity" value="{{ generated_product.initial_units }}">
+                    
+                    <button type="submit" style="background:#42a5f5; color:white;">
+                        Añadir a Inventario
+                    </button>
+                </form>
+            </div>
+
+        {% else %}
+            
+            <div class="error-box">
+                <h2>❌ Fallo en la Generación de Producto ❌</h2>
+                {% if error_message %}
+                    <p><strong>Error Crítico Capturado:</strong> {{ error_message }}</p>
+                {% else %}
+                    <p>La IA no pudo generar el objeto estructurado. Esto suele indicar un problema con la API Key, el esquema Pydantic, o que la respuesta de Gemini fue malformada.</p>
+                {% endif %}
+            </div>
+
+        {% endif %}
+        
+        <a href="{% url 'inventory_display' %}" class="back-link">← Volver al Inventario</a>
+
+        <div class="debug-box">
+            <h3>📊 Debugging: Respuesta Cruda de Gemini y Prompt Enviado</h3>
+            
+            {% if raw_ai_response %}
+                <p><strong>Mensaje Crudo de la API:</strong></p>
+                <pre>{{ raw_ai_response }}</pre>
+            {% else %}
+                <p>No se pudo obtener una respuesta de la API.</p>
+            {% endif %}
+
+            <p><strong>Prompt (Instrucción enviada):</strong></p>
+            <pre>{{ prompt_enviado }}</pre>
+        </div>
+
+    </div>
+
+</body>
+</html>
